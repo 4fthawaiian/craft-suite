@@ -1,0 +1,27 @@
+# downloaded app web builds (fetched by update.js, too big for the repo)
+gridcraft/
+wordcraft/
+deckcraft/
+pdfcraft/
+photocraft/
+figcraft/
+vectorcraft/
+lightcraft/
+effectcraft/
+designcraft/
+soundcraft/
+cadcraft/
+
+# generated installer
+dist/
+
+# runtime state + secrets — never commit
+storage/
+sessions.json
+users.json
+auth-emails.txt
+local-admin-password.txt
+versions.json
+
+node_modules/
+*.log

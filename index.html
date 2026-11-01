@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111318">
+<title>Craft Suite</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #111318; color: #e8eaee;
+         font: 15px/1.5 system-ui, -apple-system, sans-serif; }
+  header { padding: 28px 20px 8px; max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; }
+  header p { margin: 0; color: #8b919e; font-size: 13px; }
+  main { padding: 16px 20px 40px; max-width: 960px; margin: 0 auto;
+         display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  a.card { display: block; text-decoration: none; color: inherit;
+           background: #1a1e26; border: 1px solid #2a2f3a; border-radius: 14px;
+           padding: 18px; transition: border-color .15s, transform .15s; }
+  a.card:active { transform: scale(.98); }
+  a.card:hover { border-color: #4d7cff; }
+  .card h2 { margin: 0 0 2px; font-size: 17px; font-weight: 600; }
+  .card .sub { color: #7d8494; font-size: 12px; margin-bottom: 10px; }
+  .card p { margin: 0; color: #a9b0be; font-size: 13.5px; }
+  .tag { display: inline-block; font-size: 10.5px; padding: 2px 8px; border-radius: 99px;
+         background: #232936; color: #9aa3b5; margin-left: 6px; vertical-align: 2px; }
+
+  #files { max-width: 960px; margin: 0 auto; padding: 8px 20px 60px; }
+  #files h2 { font-size: 16px; font-weight: 600; margin: 18px 0 10px; }
+  #search { width: 100%; background: #1a1e26; border: 1px solid #2a2f3a; border-radius: 10px;
+            color: #e8eaee; padding: 11px 14px; font: 14px system-ui; margin-bottom: 10px; }
+  #search:focus { outline: none; border-color: #4d7cff; }
+  .frow { display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+          background: #1a1e26; border: 1px solid #2a2f3a; border-radius: 10px; margin-bottom: 6px; }
+  .frow .fname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+                 color: #d4d9e2; text-decoration: none; cursor: pointer; }
+  .frow .fname:hover { color: #7da6ff; }
+  .frow .meta { color: #7d8494; font-size: 11.5px; margin-top: 1px; }
+  .app-badge { font-size: 10.5px; padding: 3px 8px; border-radius: 99px; background: #26304a;
+               color: #9db4f0; flex-shrink: 0; }
+  .fbtn { background: transparent; border: 0; color: #7d8494; font-size: 15px;
+          padding: 6px; cursor: pointer; flex-shrink: 0; }
+  .fbtn:hover { color: #d4d9e2; }
+  .ren { flex: 1; min-width: 0; background: #111318; border: 1px solid #4d7cff; border-radius: 6px;
+         color: #e8eaee; padding: 7px 10px; font: 13px system-ui; }
+  .empty { color: #7d8494; padding: 20px; text-align: center; }
+  #dropzone { border: 1px dashed #3a4150; border-radius: 10px; padding: 14px; text-align: center;
+              color: #7d8494; font-size: 13px; margin-bottom: 10px; transition: all .15s; }
+  #dropzone.over { border-color: #4d7cff; background: #1a2030; color: #a9b0be; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Craft Suite</h1>
+  <p>ArtCraft web builds, hosted locally. Tap to launch. &nbsp;·&nbsp;
+     <a href="./dist/craft-suite-install.sh" style="color:#7da6ff;text-decoration:none">get the installer</a>
+     <span id="whoami" style="float:right;color:#7d8494"></span></p>
+</header>
+<main>
+  <a class="card" href="./gridcraft/"><h2>GridCraft<span class="tag">xlsx</span></h2><div class="sub">Spreadsheets &amp; data analysis</div><p>Ribbon tabs, formula bar, 500+ functions, PivotTables and charts.</p></a>
+  <a class="card" href="./wordcraft/"><h2>WordCraft<span class="tag">docx</span></h2><div class="sub">Word processing</div><p>Fast, familiar document editing with styles and live previews.</p></a>
+  <a class="card" href="./deckcraft/"><h2>DeckCraft<span class="tag">pptx</span></h2><div class="sub">Presentations</div><p>Build and deliver slide decks with speaker notes.</p></a>
+  <a class="card" href="./pdfcraft/"><h2>PdfCraft<span class="tag">pdf</span></h2><div class="sub">PDF workbench</div><p>Read, organize, combine, split and secure PDF documents.</p></a>
+  <a class="card" href="./photocraft/"><h2>PhotoCraft<span class="tag">psd</span></h2><div class="sub">Image editor</div><p>Layers, masks, adjustment layers, brushes — the Photoshop-shaped one.</p></a>
+  <a class="card" href="./figcraft/"><h2>FigCraft<span class="tag">ui</span></h2><div class="sub">Interface design</div><p>Vector UI design and prototyping with auto layout.</p></a>
+</main>
+
+<section id="files">
+  <h2>Files on the server</h2>
+  <input id="search" type="search" placeholder="Search files…" autocomplete="off">
+  <div id="dropzone">Drop files here to upload — routed to the right app by extension</div>
+  <div id="filelist"><div class="empty">Loading…</div></div>
+</section>
+
+<section id="users" style="display:none">
+  <h2>Users</h2>
+  <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+    <input id="uemail" type="email" placeholder="gmail address"
+      style="flex:1;min-width:180px;background:#1a1e26;border:1px solid #2a2f3a;border-radius:10px;color:#e8eaee;padding:10px 14px;font:14px system-ui">
+    <select id="urole" style="background:#1a1e26;border:1px solid #2a2f3a;border-radius:10px;color:#e8eaee;padding:0 10px;font:13px system-ui">
+      <option value="user">user</option><option value="admin">admin</option>
+    </select>
+    <button id="uadd" style="background:#4d7cff;border:0;color:#fff;border-radius:10px;padding:10px 18px;font:13px system-ui">Add Google user</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+    <input id="lname" placeholder="username"
+      style="flex:1;min-width:120px;background:#1a1e26;border:1px solid #2a2f3a;border-radius:10px;color:#e8eaee;padding:10px 14px;font:14px system-ui">
+    <input id="lpass" type="password" placeholder="password (min 6)"
+      style="flex:1;min-width:140px;background:#1a1e26;border:1px solid #2a2f3a;border-radius:10px;color:#e8eaee;padding:10px 14px;font:14px system-ui">
+    <select id="lrole" style="background:#1a1e26;border:1px solid #2a2f3a;border-radius:10px;color:#e8eaee;padding:0 10px;font:13px system-ui">
+      <option value="user">user</option><option value="admin">admin</option>
+    </select>
+    <button id="ladd" style="background:#3a4150;border:0;color:#e8eaee;border-radius:10px;padding:10px 18px;font:13px system-ui">Add local user</button>
+  </div>
+  <div id="userlist"></div>
+</section>
+
+<script>
+const list = document.getElementById('filelist');
+const search = document.getElementById('search');
+const dropzone = document.getElementById('dropzone');
+let allFiles = [];
+
+const KNOWN_APPS = new Set(['gridcraft','wordcraft','deckcraft','pdfcraft','photocraft','figcraft']);
+const EXT_MAP = {
+  xlsx:'gridcraft', xls:'gridcraft', xlsm:'gridcraft', csv:'gridcraft',
+  docx:'wordcraft', doc:'wordcraft', rtf:'wordcraft', odt:'wordcraft', txt:'wordcraft', md:'wordcraft',
+  pptx:'deckcraft', ppt:'deckcraft',
+  pdf:'pdfcraft',
+  psd:'photocraft', psb:'photocraft', png:'photocraft', jpg:'photocraft',
+  jpeg:'photocraft', gif:'photocraft', webp:'photocraft', tiff:'photocraft', bmp:'photocraft',
+  fig:'figcraft',
+};
+const inferApp = name => EXT_MAP[(name.split('.').pop() || '').toLowerCase()] || 'shared';
+
+function fmtSize(s) { return s > 1048576 ? (s/1048576).toFixed(1)+' MB' : Math.ceil(s/1024)+' KB'; }
+
+function render() {
+  const q = search.value.trim().toLowerCase();
+  const shown = allFiles.filter(f =>
+    !q || f.name.toLowerCase().includes(q) || f.app.includes(q));
+  list.innerHTML = '';
+  if (!shown.length) {
+    list.innerHTML = `<div class="empty">${allFiles.length ? 'No matches' : 'No files yet — save something from an app'}</div>`;
+    return;
+  }
+  shown.forEach(f => {
+    const row = document.createElement('div');
+    row.className = 'frow';
+    const u = f.owner ? `&user=${encodeURIComponent(f.owner)}` : '';
+    const ownerBadge = f.owner
+      ? `<span class="app-badge" style="background:#3a2a2a;color:#e0b4a0">${f.owner}</span>` : '';
+    const nameHref = KNOWN_APPS.has(f.app)
+      ? `./${f.app}/?pick=${encodeURIComponent(f.name)}${u ? '&owner=' + encodeURIComponent(f.owner) : ''}`
+      : `/api/file?app=${f.app}&name=${encodeURIComponent(f.name)}${u}`;
+    row.innerHTML = `
+      <span class="app-badge">${f.app}</span>
+      <a class="fname" href="${nameHref}">${f.name}</a>${ownerBadge}
+      <button class="fbtn ren-btn" title="Rename">✎</button>
+      <a class="fbtn" title="Download" href="/api/file?app=${f.app}&name=${encodeURIComponent(f.name)}${u}" download="${f.name}">⬇</a>
+      <button class="fbtn del-btn" title="Delete">✕</button>
+      <span class="meta" style="flex-shrink:0">${fmtSize(f.size)}<br>${new Date(f.mtime).toLocaleDateString()}</span>`;
+    row.querySelector('.ren-btn').onclick = () => startRename(row, f);
+    row.querySelector('.del-btn').onclick = () => {
+      if (!confirm(`Delete ${f.name}?`)) return;
+      fetch(`/api/delete?app=${f.app}&name=${encodeURIComponent(f.name)}${u}`, { method: 'POST' })
+        .then(load);
+    };
+    list.appendChild(row);
+  });
+}
+
+function startRename(row, f) {
+  row.innerHTML = `<span class="app-badge">${f.app}</span>`;
+  const field = document.createElement('input');
+  field.className = 'ren'; field.value = f.name;
+  const ok = document.createElement('button'); ok.className = 'fbtn'; ok.textContent = '✓';
+  const no = document.createElement('button'); no.className = 'fbtn'; no.textContent = '✕';
+  const commit = () => {
+    const to = field.value.trim();
+    if (!to || to === f.name) { render(); return; }
+    const u = f.owner ? `&user=${encodeURIComponent(f.owner)}` : '';
+    fetch(`/api/rename?app=${f.app}&from=${encodeURIComponent(f.name)}&to=${encodeURIComponent(to)}${u}`, { method: 'POST' })
+      .then(load);
+  };
+  ok.onclick = commit; no.onclick = render;
+  field.onkeydown = e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') render(); };
+  row.append(field, ok, no);
+  field.focus();
+  field.setSelectionRange(0, f.name.lastIndexOf('.') > 0 ? f.name.lastIndexOf('.') : f.name.length);
+}
+
+function load() {
+  fetch('/api/files').then(r => r.json()).then(({ apps }) => {
+    allFiles = Object.entries(apps).flatMap(([app, files]) =>
+      files.map(f => ({ app, ...f })))
+      .sort((a, b) => b.mtime - a.mtime);
+    render();
+  }).catch(() => { list.innerHTML = '<div class="empty">Could not reach server</div>'; });
+}
+search.addEventListener('input', render);
+
+let myRole = null;
+fetch('/api/whoami').then(r => r.json()).then(({ user, role }) => {
+  myRole = role;
+  const el = document.getElementById('whoami');
+  if (user) {
+    el.textContent = `signed in as ${user}${role ? ' · ' + role : ''} `;
+    const out = document.createElement('a');
+    out.href = '/auth/logout';
+    out.textContent = '· sign out';
+    out.style.cssText = 'color:#7da6ff;text-decoration:none;margin-left:6px';
+    el.appendChild(out);
+  }
+  if (role === 'admin') initUsers();
+}).catch(() => {});
+
+// ---- admin: user management ----
+function initUsers() {
+  document.getElementById('users').style.display = '';
+  const ulist = document.getElementById('userlist');
+  const render = () => fetch('/api/users').then(r => r.json()).then(({ users }) => {
+    ulist.innerHTML = '';
+    users.forEach(u => {
+      const row = document.createElement('div');
+      row.className = 'frow';
+      const typeBadge = u.type === 'local'
+        ? '<span class="app-badge" style="background:#2a3a2a;color:#a0d4a0">local</span>'
+        : '<span class="app-badge" style="background:#26304a;color:#9db4f0">google</span>';
+      row.innerHTML = `<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${u.id}</span>
+        ${typeBadge}<span class="app-badge">${u.role}</span>
+        ${u.type === 'local' ? '<button class="fbtn pw-btn" title="Reset password">pw</button>' : ''}
+        <button class="fbtn role-btn" title="Toggle role">${u.role === 'admin' ? 'demote' : 'promote'}</button>
+        <button class="fbtn rm-btn" title="Remove">✕</button>`;
+      row.querySelector('.role-btn').onclick = () =>
+        fetch(`/api/users/save?email=${encodeURIComponent(u.id)}&role=${u.role === 'admin' ? 'user' : 'admin'}`, { method: 'POST' }).then(render);
+      const pw = row.querySelector('.pw-btn');
+      if (pw) pw.onclick = () => {
+        const p = prompt(`New password for ${u.id} (min 6)`);
+        if (!p) return;
+        fetch('/api/users/password', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: u.id, password: p }) }).then(r => r.json())
+          .then(j => alert(j.ok ? 'password set' : (j.error || 'failed')));
+      };
+      row.querySelector('.rm-btn').onclick = () => {
+        if (!confirm(`Remove ${u.id}?`)) return;
+        fetch(`/api/users/remove?email=${encodeURIComponent(u.id)}`, { method: 'POST' }).then(render);
+      };
+      ulist.appendChild(row);
+    });
+  });
+  document.getElementById('uadd').onclick = () => {
+    const email = document.getElementById('uemail').value.trim();
+    const role = document.getElementById('urole').value;
+    if (!email) return;
+    fetch(`/api/users/save?email=${encodeURIComponent(email)}&role=${role}`, { method: 'POST' })
+      .then(() => { document.getElementById('uemail').value = ''; render(); });
+  };
+  document.getElementById('ladd').onclick = () => {
+    const username = document.getElementById('lname').value.trim();
+    const password = document.getElementById('lpass').value;
+    const role = document.getElementById('lrole').value;
+    if (!username || !password) return;
+    fetch('/api/users/savelocal', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password, role }) }).then(r => r.json())
+      .then(j => {
+        if (!j.ok) return alert(j.error || 'failed');
+        document.getElementById('lname').value = ''; document.getElementById('lpass').value = '';
+        render();
+      });
+  };
+  render();
+}
+
+// drag & drop upload — routed by extension
+['dragenter', 'dragover'].forEach(ev => dropzone.addEventListener(ev, e => {
+  e.preventDefault(); dropzone.classList.add('over');
+}));
+['dragleave', 'drop'].forEach(ev => dropzone.addEventListener(ev, e => {
+  e.preventDefault(); dropzone.classList.remove('over');
+}));
+dropzone.addEventListener('drop', async e => {
+  const files = [...(e.dataTransfer.files || [])];
+  if (!files.length) return;
+  for (const f of files) {
+    const app = inferApp(f.name);
+    dropzone.textContent = `Uploading ${f.name} → ${app}…`;
+    try {
+      const r = await fetch(`/api/save?app=${app}&name=${encodeURIComponent(f.name)}`,
+        { method: 'POST', body: f });
+      dropzone.textContent = r.ok
+        ? `${f.name} → ${app} ✓`
+        : `${f.name}: upload failed (${r.status})`;
+    } catch {
+      dropzone.textContent = `${f.name}: upload failed`;
+    }
+  }
+  setTimeout(() => { dropzone.textContent = 'Drop files here to upload — routed to the right app by extension'; }, 3000);
+  load();
+});
+
+load();
+</script>
+</body>
+</html>
