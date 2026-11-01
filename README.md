@@ -10,6 +10,10 @@ downloads. Craft Suite wraps them with a small zero-dependency Node server
 that gives every app proper open/save/rename/delete against server storage,
 plus a launcher page, file browser, and a complete auth layer.
 
+| Launcher + file browser | GridCraft running in the browser | Login wall (Google + local) |
+|---|---|---|
+| ![landing](docs/screenshots/landing.png) | ![gridcraft](docs/screenshots/gridcraft.png) | ![login](docs/screenshots/login.png) |
+
 ## Features
 
 - **Six apps, one server** — GridCraft, WordCraft, DeckCraft, PdfCraft,
