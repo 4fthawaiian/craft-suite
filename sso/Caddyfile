@@ -1,0 +1,9 @@
+# Caddyfile for Craft Suite SSO — TLS terminates here, oauth2-proxy behind it.
+# Replace YOUR_DOMAIN. Caddy auto-renews the cert via ACME (needs port 443
+# reachable, or use the dns-01 variants noted in README).
+#
+#   caddy run --config /path/to/Caddyfile
+
+YOUR_DOMAIN {
+	reverse_proxy 127.0.0.1:4180
+}
